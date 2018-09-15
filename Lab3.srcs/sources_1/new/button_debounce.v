@@ -20,10 +20,47 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module button_debounce(
-    input clk,
-    input rst,
-    input button,
-    output debounced_button
-    );
+module button_debounce(clk, rst, button, debounced_button);
+
+   // Declare inputs and outputs
+   input clk, rst, button;
+   output debounced_button;
+
+   // Declare necessary registers
+   // reg	  button;
+   reg	  debounced_button;
+   reg [3:0] counter = 0;
+   parameter [3:0] peak = 4;
+
+   always @(rst)
+     begin
+	// Handle reset conditions
+	if(rst == 1)
+	  begin
+	     counter = 0;
+	  end
+     end
+
+   always @(posedge clk)
+     begin
+	// Increment counter if button is pressed
+	if(button == 1)
+	  begin
+	     counter = counter + 1;
+	  end
+	else
+	  begin
+	     counter = 0;
+	  end
+
+	// Check debounce conditions
+	if(counter == peak)
+	  begin
+	     debounced_button = 1;
+	  end
+	else
+	  begin
+	     debounced_button = 0;
+	  end
+     end
 endmodule
