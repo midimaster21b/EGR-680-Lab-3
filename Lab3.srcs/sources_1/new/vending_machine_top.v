@@ -38,6 +38,18 @@ module vending_machine_top(
    wire    deb_nic, deb_dime, deb_gum, deb_app, deb_yog;
    wire    deb_clk;
 
+   // Activity wire (for reset timer)
+   wire    activity, reset_line, inactivity_rst;
+
+   // OR the user input reset line and inactivity reset line for final reset line
+   or rst_or(reset_line, rst, inactivity_rst);
+
+   // Activity is due to user input, user reset, or inactivity timeout
+   or active_or(activity, reset_line, deb_nic, deb_dime, deb_gum, deb_app, deb_yog);
+
+   // Reset timer (3 seconds)
+   clock_divider #(374999999) reset_timer(clk, activity, reset_line);
+
    // Divide clock down to 50 ms period for debouncing
    clock_divider #(6249999) debounce_clk(clk, rst, deb_clk);
 
