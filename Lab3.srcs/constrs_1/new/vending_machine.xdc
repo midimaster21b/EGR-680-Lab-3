@@ -3,8 +3,8 @@ set_property -dict { PACKAGE_PIN H16 IOSTANDARD LVCMOS33 } [get_ports { clk }];
 create_clock -add -name sys_clk_pin -period 8.00 -waveform {0 4} [get_ports { clk }];
 
 # Buttons
-set_property -dict { PACKAGE_PIN D20 IOSTANDARD LVCMOS33 } [get_ports { rst }];
-set_property -dict { PACKAGE_PIN D20 IOSTANDARD LVCMOS33 } [get_ports { yogurt }];
+set_property -dict { PACKAGE_PIN L19 IOSTANDARD LVCMOS33 } [get_ports { rst }];
+set_property -dict { PACKAGE_PIN L20 IOSTANDARD LVCMOS33 } [get_ports { yogurt }];
 set_property -dict { PACKAGE_PIN D20 IOSTANDARD LVCMOS33 } [get_ports { apple }];
 set_property -dict { PACKAGE_PIN D19 IOSTANDARD LVCMOS33 } [get_ports { gum }];
 
@@ -20,7 +20,7 @@ set_property -dict { PACKAGE_PIN Y17 IOSTANDARD LVCMOS33 } [get_ports { seven_se
 set_property -dict { PACKAGE_PIN U18 IOSTANDARD LVCMOS33 } [get_ports { seven_segment[2] }];
 set_property -dict { PACKAGE_PIN U19 IOSTANDARD LVCMOS33 } [get_ports { seven_segment[1] }];
 set_property -dict { PACKAGE_PIN W18 IOSTANDARD LVCMOS33 } [get_ports { seven_segment[0] }];
-set_property -dict { PACKAGE_PIN W19 IOSTANDARD LVCMOS33 } [get_ports { seven_segment_digit[0] }];
+set_property -dict { PACKAGE_PIN W19 IOSTANDARD LVCMOS33 } [get_ports { seven_segment_digit }];
 
 # PmodB (LED Status Bar)
 set_property -dict { PACKAGE_PIN W14 IOSTANDARD LVCMOS33 } [get_ports { progress_bar_clk }];

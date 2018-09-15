@@ -29,9 +29,9 @@ module vending_machine_top(
     input apple,
     input yogurt,
     output [6:0] seven_segment,
-    output [1:0] seven_segment_digit,
+    output seven_segment_digit,
     output progress_bar_clk,
-    output progress_bar_output
+    output progress_bar_data
     );
 
    // Debounce wires
