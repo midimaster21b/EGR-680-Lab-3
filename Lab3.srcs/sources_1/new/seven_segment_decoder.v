@@ -28,7 +28,7 @@ module seven_segment_decoder(clk, rst, char, decoded_output);
    output [6:0] decoded_output;
 
    // Declare module registers
-   reg [6:0] 	decoded_output;
+   reg [6:0]	decoded_output;
 
    // Handle reset behavior
    always @(rst)

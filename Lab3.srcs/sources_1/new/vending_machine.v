@@ -482,12 +482,41 @@ module vending_machine(
 	       change <= `change_nothing;
 	    end
 
+
+	  /*****************************
+	   * Current total money input
+	   *****************************/
+	  `five_cents:
+	    begin
+	       dispensed_item <= `total_five;
+	       change <= `change_nothing;
+	    end
+
+	  `ten_cents:
+	    begin
+	       dispensed_item <= `total_ten;
+	       change <= `change_nothing;
+	    end
+
+	  `fifteen_cents:
+	    begin
+	       dispensed_item <= `total_fifteen;
+	       change <= `change_nothing;
+	    end
+
+	  `twenty_cents:
+	    begin
+	       dispensed_item <= `total_twenty;
+	       change <= `change_nothing;
+	    end
+
 	  /*****************************
 	   * Default dispensing behavior
 	   *****************************/
 	  default:
 	    begin
-	       dispensed_item <= `dispensing_nothing;
+	       // dispensed_item <= `dispensing_nothing;
+	       dispensed_item <= `total_zero;
 	       change <= `change_nothing;
 	    end
 	endcase // case (current_state)
