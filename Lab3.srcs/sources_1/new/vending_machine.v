@@ -42,10 +42,19 @@
 `define dispense_yogurt_20 4'b1001
 
 // Dispensed item definitions
-`define dispensing_nothing 2'b00
-`define dispensing_gum     2'b01
-`define dispensing_apple   2'b10
-`define dispensing_yogurt  2'b11
+`define dispensing_nothing 4'b0000
+`define dispensing_gum     4'b0001
+`define dispensing_apple   4'b0010
+`define dispensing_yogurt  4'b0011
+
+// Define current total money input
+// NOTE: HACKY METHOD!!!
+// TODO: FIND A MORE ELEGANT APPROVED SOLUTION
+`define total_zero         3'b0100
+`define total_five         3'b0101
+`define total_ten          3'b0110
+`define total_fifteen      3'b0111
+`define total_twenty       3'b1000
 
 // Change definitions
 `define change_nothing     2'b00
