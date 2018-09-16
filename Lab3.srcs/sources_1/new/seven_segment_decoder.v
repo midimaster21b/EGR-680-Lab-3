@@ -53,12 +53,13 @@ module seven_segment_decoder(clk, rst, char, decoded_output);
 	  6: decoded_output <= 7'b1011111; // 6
 	  7: decoded_output <= 7'b1110000; // 7, T
 	  8: decoded_output <= 7'b1111111; // 8, B
-	  9: decoded_output <= 7'b1111011; // 9, g
+	  9: decoded_output <= 7'b1110011; // 9
 
 	  // Letters
 	  10: decoded_output <= 7'b1110111; // A, R
 	  11: decoded_output <= 7'b1001111; // E
-	  12: decoded_output <= 7'b0111011; // Y
+	  12: decoded_output <= 7'b1111011; // g
+	  13: decoded_output <= 7'b0111011; // Y
 
 	  // Default behavior
 	  default: decoded_output <= 7'b0000000; // No output
