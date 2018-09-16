@@ -41,22 +41,25 @@
 `define dispense_apple_20  4'b1000
 `define dispense_yogurt_20 4'b1001
 
-
 module vending_machine(
-		       input 	    clk,
-		       input 	    rst,
-		       input 	    nickel,
-		       input 	    dime,
-		       input 	    gum,
-		       input 	    apple,
-		       input 	    yogurt,
+		       input	    clk,
+		       input	    rst,
+		       input	    nickel,
+		       input	    dime,
+		       input	    gum,
+		       input	    apple,
+		       input	    yogurt,
 		       output [3:0] dispensed_item,
 		       output [3:0] change
 		       );
 
+   // Define module parameters
+   parameter [31:0] dispenser_state_time = 124999999; // 1 second
+
    // Define module registers
-   reg [3:0] 			    current_state = `reset;
-   reg [3:0] 			    next_state = `reset;
+   reg [3:0]			    current_state = `reset;
+   reg [3:0]			    next_state = `reset;
+   reg [31:0]			    temp_counter = 0;
 
    // Handle reset behavior
    always @(rst)
@@ -76,6 +79,8 @@ module vending_machine(
 	   **********************/
 	  `reset:
 	    begin
+	       temp_counter <= 0;
+
 	       // Handle nickel input
 	       if(nickel == 1)
 		 begin
@@ -294,12 +299,118 @@ module vending_machine(
 
 	    end // case: `twenty_cents
 
+	  /************************
+	   * Dispensing Gum States
+	   ************************/
+	  `dispense_gum_10:
+	    begin
+	       // Check if it has reached dispenser state time
+	       if(temp_counter >= dispenser_state_time)
+		 begin
+		    temp_counter <= 0;
+		    next_state = `reset;
+		 end
+	       else
+		 begin
+		    // Increment temp counter
+		    temp_counter = temp_counter + 1;
+		    next_state = `dispense_gum_10;
+		 end
+	    end // case: `dispense_gum_10
+
+	  `dispense_gum_15:
+	    begin
+	       // Check if it has reached dispenser state time
+	       if(temp_counter >= dispenser_state_time)
+		 begin
+		    temp_counter <= 0;
+		    next_state = `reset;
+		 end
+	       else
+		 begin
+		    // Increment temp counter
+		    temp_counter = temp_counter + 1;
+		    next_state = `dispense_gum_15;
+		 end
+	    end // case: `dispense_gum_15
+
+	  `dispense_gum_20:
+	    begin
+	       // Check if it has reached dispenser state time
+	       if(temp_counter >= dispenser_state_time)
+		 begin
+		    temp_counter <= 0;
+		    next_state = `reset;
+		 end
+	       else
+		 begin
+		    // Increment temp counter
+		    temp_counter = temp_counter + 1;
+		    next_state = `dispense_gum_20;
+		 end
+	    end // case: `dispense_gum_20
+
+	  /**************************
+	   * Dispensing Apple States
+	   **************************/
+	  `dispense_apple_15:
+	    begin
+	       // Check if it has reached dispenser state time
+	       if(temp_counter >= dispenser_state_time)
+		 begin
+		    temp_counter <= 0;
+		    next_state = `reset;
+		 end
+	       else
+		 begin
+		    // Increment temp counter
+		    temp_counter = temp_counter + 1;
+		    next_state = `dispense_apple_15;
+		 end
+	    end // case: `dispense_apple_15
+
+	  `dispense_apple_20:
+	    begin
+	       // Check if it has reached dispenser state time
+	       if(temp_counter >= dispenser_state_time)
+		 begin
+		    temp_counter <= 0;
+		    next_state = `reset;
+		 end
+	       else
+		 begin
+		    // Increment temp counter
+		    temp_counter = temp_counter + 1;
+		    next_state = `dispense_apple_20;
+		 end
+	    end // case: `dispense_apple_20
+
+	  /***************************
+	   * Dispensing Yogurt States
+	   ***************************/
+	  `dispense_yogurt_20:
+	    begin
+	       // Check if it has reached dispenser state time
+	       if(temp_counter >= dispenser_state_time)
+		 begin
+		    temp_counter <= 0;
+		    next_state = `reset;
+		 end
+	       else
+		 begin
+		    // Increment temp counter
+		    temp_counter = temp_counter + 1;
+		    next_state = `dispense_yogurt_20;
+		 end
+	    end // case: `dispense_yogurt_20
+
+
 	  // handle out of range state
 	  default: next_state = `reset;
 	endcase // case (current_state)
      end
 
    // Continuous assignment of next state to current state
-   assign current_state = next_state;
+   // assign current_state = next_state;
 
 endmodule
