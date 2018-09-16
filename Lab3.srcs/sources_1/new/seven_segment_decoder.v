@@ -20,28 +20,18 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module seven_segment_decoder(clk, rst, char, decoded_output);
+module seven_segment_decoder(char, decoded_output);
 
    // Declare inputs and outputs
-   input clk, rst;
    input [3:0] char;
    output [6:0] decoded_output;
 
    // Declare module registers
-   reg [6:0]	decoded_output;
+   reg [6:0] 	decoded_output;
 
-   // Handle reset behavior
-   always @(rst)
+   always @(char)
      begin
-	if(rst == 1)
-	  begin
-	     decoded_output <= 7'b0000000;
-	  end
-     end
-
-   // Handle decoder behavior
-   always @(posedge clk)
-     begin
+	// Handle decoder behavior
 	case(char)
 	  // Numbers
 	  0: decoded_output <= 7'b1111110; // 0
@@ -64,5 +54,5 @@ module seven_segment_decoder(clk, rst, char, decoded_output);
 	  // Default behavior
 	  default: decoded_output <= 7'b0000000; // No output
 	endcase // case (char)
-     end
+     end // always @ (char)
 endmodule
