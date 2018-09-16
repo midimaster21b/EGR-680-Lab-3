@@ -34,12 +34,12 @@
 
 // 15 cents dispense states
 `define dispense_gum_15    4'b0110
-`define dispense_apple_15  4'b0110
+`define dispense_apple_15  4'b0111
 
 // 20 cents dispense states
-`define dispense_gum_20    4'b0111
-`define dispense_apple_20  4'b1000
-`define dispense_yogurt_20 4'b1001
+`define dispense_gum_20    4'b1000
+`define dispense_apple_20  4'b1001
+`define dispense_yogurt_20 4'b1010
 
 // Dispensed item definitions
 `define dispensing_nothing 4'b0000
@@ -50,11 +50,11 @@
 // Define current total money input
 // NOTE: HACKY METHOD!!!
 // TODO: FIND A MORE ELEGANT APPROVED SOLUTION
-`define total_zero         3'b0100
-`define total_five         3'b0101
-`define total_ten          3'b0110
-`define total_fifteen      3'b0111
-`define total_twenty       3'b1000
+`define total_zero         4'b0100
+`define total_five         4'b0101
+`define total_ten          4'b0110
+`define total_fifteen      4'b0111
+`define total_twenty       4'b1000
 
 // Change definitions
 `define change_nothing     2'b00
