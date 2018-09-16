@@ -41,6 +41,18 @@
 `define dispense_apple_20  4'b1000
 `define dispense_yogurt_20 4'b1001
 
+// Dispensed item definitions
+`define dispensing_nothing 2'b00
+`define dispensing_gum     2'b01
+`define dispensing_apple   2'b10
+`define dispensing_yogurt  2'b11
+
+// Change definitions
+`define change_nothing     2'b00
+`define change_five        2'b01
+`define change_ten         2'b10
+`define change_fifteen     2'b11
+
 module vending_machine(
 		       input	    clk,
 		       input	    rst,
@@ -49,8 +61,8 @@ module vending_machine(
 		       input	    gum,
 		       input	    apple,
 		       input	    yogurt,
-		       output [3:0] dispensed_item,
-		       output [3:0] change
+		       output [1:0] dispensed_item,
+		       output [1:0] change
 		       );
 
    // Define module parameters
@@ -59,7 +71,9 @@ module vending_machine(
    // Define module registers
    reg [3:0]			    current_state = `reset;
    reg [3:0]			    next_state = `reset;
-   reg [31:0]			    temp_counter = 0;
+   reg [31:0]			    temp_counter = 0; // For waiting in states
+   reg [1:0]			    change;
+   reg [1:0]			    dispensed_item;
 
    // Handle reset behavior
    always @(rst)
@@ -408,9 +422,65 @@ module vending_machine(
 	  // handle out of range state
 	  default: next_state = `reset;
 	endcase // case (current_state)
-     end
+     end // always @ (posedge clk) (State transition behavior)
 
-   // Continuous assignment of next state to current state
-   // assign current_state = next_state;
+   // Handle output behavior
+   always @(posedge clk)
+     begin
+	case(current_state)
+	  /**************************
+	   * Gum dispensing behavior
+	   **************************/
+	  `dispense_gum_10:
+	    begin
+	       dispensed_item <= `dispensing_gum;
+	       change <= `change_nothing;
+	    end
 
+	  `dispense_gum_15:
+	    begin
+	       dispensed_item <= `dispensing_gum;
+	       change <= `change_five;
+	    end
+
+	  `dispense_gum_20:
+	    begin
+	       dispensed_item <= `dispensing_gum;
+	       change <= `change_ten;
+	    end
+
+	  /****************************
+	   * Apple dispensing behavior
+	   ****************************/
+	  `dispense_apple_15:
+	    begin
+	       dispensed_item <= `dispensing_apple;
+	       change <= `change_nothing;
+	    end
+
+	  `dispense_apple_20:
+	    begin
+	       dispensed_item <= `dispensing_apple;
+	       change <= `change_five;
+	    end
+
+	  /*****************************
+	   * Yogurt dispensing behavior
+	   *****************************/
+	  `dispense_yogurt_20:
+	    begin
+	       dispensed_item <= `dispensing_yogurt;
+	       change <= `change_nothing;
+	    end
+
+	  /*****************************
+	   * Default dispensing behavior
+	   *****************************/
+	  default:
+	    begin
+	       dispensed_item <= `dispensing_nothing;
+	       change <= `change_nothing;
+	    end
+	endcase // case (current_state)
+     end // always @ (posedge clk)
 endmodule
