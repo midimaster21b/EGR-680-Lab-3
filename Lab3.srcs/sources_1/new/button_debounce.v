@@ -32,35 +32,35 @@ module button_debounce(clk, rst, button, debounced_button);
    reg [3:0] counter = 0;
    parameter [3:0] peak = 4;
 
-   always @(rst)
+   always @(posedge clk or posedge rst)
      begin
 	// Handle reset conditions
 	if(rst == 1)
 	  begin
 	     counter = 0;
 	  end
-     end
 
-   always @(posedge clk)
-     begin
-	// Increment counter if button is pressed
-	if(button == 1)
-	  begin
-	     counter = counter + 1;
-	  end
 	else
 	  begin
-	     counter = 0;
-	  end
+	     // Increment counter if button is pressed
+	     if(button == 1)
+	       begin
+		  counter = counter + 1;
+	       end
+	     else
+	       begin
+		  counter = 0;
+	       end
 
-	// Check debounce conditions
-	if(counter == peak)
-	  begin
-	     debounced_button = 1;
-	  end
-	else
-	  begin
-	     debounced_button = 0;
+	     // Check debounce conditions
+	     if(counter == peak)
+	       begin
+		  debounced_button = 1;
+	       end
+	     else
+	       begin
+		  debounced_button = 0;
+	       end
 	  end
      end
 endmodule

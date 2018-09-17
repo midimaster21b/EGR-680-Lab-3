@@ -27,7 +27,7 @@ module seven_segment_decoder(char, decoded_output);
    output [6:0] decoded_output;
 
    // Declare module registers
-   reg [6:0] 	decoded_output;
+   reg [6:0]	decoded_output;
 
    always @(char)
      begin

@@ -35,9 +35,10 @@
 `define total_fifteen      4'b0111
 `define total_twenty       4'b1000
 
-module item_decoder(item, item_character, item_output_channel);
+module item_decoder(clk, rst, item, item_character, item_output_channel);
 
    // Declare inputs
+   input clk, rst;
    input  [3:0] item;
    output [3:0] item_character;
    output	item_output_channel;
@@ -47,7 +48,7 @@ module item_decoder(item, item_character, item_output_channel);
    reg		item_output_channel;
    reg		output_channel = 0;
 
-   always @(item)
+   always @(posedge clk)
      begin
 	case(item)
 	  // When nothing is being dispensed, print nothing
