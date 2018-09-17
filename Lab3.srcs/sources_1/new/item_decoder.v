@@ -206,8 +206,18 @@ module item_decoder(clk, rst, item, item_character, item_output_channel);
 
 	  default:
 	    begin
-	       item_character = 4'b0000;
-	       item_output_channel = 0;
+	       if(output_channel == 0)
+		 begin
+		    item_character = 15; // blank
+		    item_output_channel = 1;
+		    output_channel = 1;
+		 end
+	       else
+		 begin
+		    item_character = 15; // blank
+		    item_output_channel = 0;
+		    output_channel = 0;
+		 end
 	    end
 
 	endcase // case (item)

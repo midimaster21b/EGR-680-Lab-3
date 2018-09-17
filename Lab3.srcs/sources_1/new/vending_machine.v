@@ -513,6 +513,12 @@ module vending_machine(clk, rst, nickel, dime, gum, apple, yogurt, dispensed_ite
 	  /*****************************
 	   * Default dispensing behavior
 	   *****************************/
+	  `reset:
+	    begin
+	       dispensed_item <= `dispensing_nothing;
+	       change <= `change_nothing;
+	    end
+
 	  default:
 	    begin
 	       dispensed_item <= `total_zero;
