@@ -65,12 +65,12 @@ module vending_machine_top(
    // Seven segment display divider
    clock_divider #(499999) display_clk(clk, rst, disp_clk);
 
-   // Button debouncing 4 for 250 ms debounce
-   button_debounce #(8) nickel_debounce(deb_clk, rst, nickel, deb_nic);
-   button_debounce #(8) dime_debounce(deb_clk, rst, dime, deb_dime);
-   button_debounce #(8) gum_debounce(deb_clk, rst, gum, deb_gum);
-   button_debounce #(8) apple_debounce(deb_clk, rst, apple, deb_app);
-   button_debounce #(8) yogurt_debounce(deb_clk, rst, yogurt, deb_yog);
+   // Button debouncing 4(+1) for 250 ms debounce
+   button_debounce #(.clk_division(6249999), .seq_samps(4)) nickel_debounce(clk, rst, nickel, deb_nic);
+   button_debounce #(.clk_division(6249999), .seq_samps(4)) dime_debounce(clk, rst, dime, deb_dime);
+   button_debounce #(.clk_division(6249999), .seq_samps(4)) gum_debounce(clk, rst, gum, deb_gum);
+   button_debounce #(.clk_division(6249999), .seq_samps(4)) apple_debounce(clk, rst, apple, deb_app);
+   button_debounce #(.clk_division(6249999), .seq_samps(4)) yogurt_debounce(clk, rst, yogurt, deb_yog);
 
    // Hook up vending machine
    vending_machine vendor(clk,

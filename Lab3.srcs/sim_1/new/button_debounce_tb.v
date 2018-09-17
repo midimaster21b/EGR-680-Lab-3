@@ -24,7 +24,7 @@ module button_debounce_tb();
    reg clk, rst, btn;
 
    // Initialize module
-   button_debounce #(4) testing(clk, rst, btn, debounce);
+   button_debounce #(.clk_division(3), .seq_samps(5)) testing(clk, rst, btn, debounce);
 
    // Generate clock signal
    always #10 clk = ~clk;
@@ -44,7 +44,7 @@ module button_debounce_tb();
    initial #200 btn = 1'b1;
 
    // Set button to low at 500 ns
-   initial #500 btn = 1'b0;
+   initial #900 btn = 1'b0;
 
    // Run for 1000 ns
    initial #1000 $finish;

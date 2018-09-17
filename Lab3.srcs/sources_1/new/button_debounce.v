@@ -26,41 +26,61 @@ module button_debounce(clk, rst, button, debounced_button);
    input clk, rst, button;
    output debounced_button;
 
+   // Declare module parameters
+   parameter [31:0] clk_division = 6249999; // 50 ms intervals
+   parameter [3:0] seq_samps = 4; // Sequential samples necessary to trigger a debounced output
+
    // Declare necessary registers
-   // reg	  button;
    reg	  debounced_button;
-   reg [3:0] counter = 0;
-   parameter [3:0] peak = 4;
+   reg [3:0] samp_counter = 0; // Counts from zero up to seq_samps and triggers a debounce
+   reg [31:0] clk_counter = 0; // Counts from zero to clk_division (Used for clock division)
 
    always @(posedge clk or posedge rst)
      begin
 	// Handle reset conditions
 	if(rst == 1)
 	  begin
-	     counter = 0;
+	     // Reset clock divider and sequential sample counters to zero
+	     samp_counter = 0;
+	     clk_counter = 0;
 	  end
 
 	else
 	  begin
-	     // Increment counter if button is pressed
-	     if(button == 1)
+	     if(clk_counter >= clk_division)
 	       begin
-		  counter = counter + 1;
-	       end
-	     else
-	       begin
-		  counter = 0;
-	       end
+		  // Reset clk divider counter to zero
+		  clk_counter = 0;
 
-	     // Check debounce conditions
-	     if(counter == peak)
-	       begin
-		  debounced_button = 1;
-	       end
+		  // Increment counter if button is pressed
+		  if(button == 1)
+		    begin
+		       samp_counter = samp_counter + 1;
+		    end
+		  else
+		    begin
+		       samp_counter = 0;
+		    end
+
+		  // Check debounce conditions
+		  if(samp_counter == seq_samps)
+		    begin
+		       debounced_button = 1;
+		    end
+		  else
+		    begin
+		       debounced_button = 0;
+		    end
+	       end // if (clk_counter >= clk_division)
 	     else
 	       begin
+		  // Increment clock divider counter
+		  clk_counter = clk_counter + 1;
+
+		  // Set debounced output to zero
 		  debounced_button = 0;
-	       end
+	       end // else: !if(clk_counter >= clk_division)
+
 	  end
      end
 endmodule
