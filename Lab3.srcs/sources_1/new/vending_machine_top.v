@@ -21,32 +21,29 @@
 
 
 module vending_machine_top(
-    input clk,
-    input rst,
-    input nickel,
-    input dime,
-    input gum,
-    input apple,
-    input yogurt,
+    input	 clk,
+    input	 rst,
+    input	 nickel,
+    input	 dime,
+    input	 gum,
+    input	 apple,
+    input	 yogurt,
     output [6:0] seven_segment,
-    output 	 seven_segment_digit,
+    output	 seven_segment_digit,
     output [3:0] change_output
     );
 
    // Debounce wires
    wire    deb_nic, deb_dime, deb_gum, deb_app, deb_yog;
-   wire    deb_clk, disp_clk;
+   wire    disp_clk;
 
    // Activity wire (for reset timer)
    wire    activity, reset_line, inactivity_rst;
 
-   // Registers for game output
-   // reg [3:0] display;
-   // reg [1:0] change;
-   wire [1:0] change;
+   // Wires for game output
    wire [3:0] display;
 
-   // reg [3:0]  seven_seg_char;
+   // Wires for connecting game output and output decoder
    wire [3:0]  seven_seg_char;
 
    // OR the user input reset line and inactivity reset line for final reset line
