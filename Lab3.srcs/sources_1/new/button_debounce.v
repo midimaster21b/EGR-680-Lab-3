@@ -32,7 +32,7 @@ module button_debounce(clk, rst, button, debounced_button);
 
    // Declare necessary registers
    reg	  debounced_button;
-   reg [3:0] samp_counter = 0; // Counts from zero up to seq_samps and triggers a debounce
+   reg [9:0] samp_counter = 0; // Counts from zero up to seq_samps and triggers a debounce
    reg [31:0] clk_counter = 0; // Counts from zero to clk_division (Used for clock division)
 
    always @(posedge clk or posedge rst)
