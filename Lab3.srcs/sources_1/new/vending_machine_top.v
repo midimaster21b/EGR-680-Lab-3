@@ -33,6 +33,13 @@ module vending_machine_top(
     output [3:0] change_output
     );
 
+   // Parameters
+   parameter [31:0] debounce_interval = 6249999;
+   parameter [3:0]  debounce_samples = 4;
+   parameter [31:0] reset_count = 374999999;
+   parameter [31:0] disp_count = 499;
+
+
    // Debounce wires
    wire    deb_nic, deb_dime, deb_gum, deb_app, deb_yog;
    wire    disp_clk;
@@ -53,20 +60,17 @@ module vending_machine_top(
    or active_or(activity, reset_line, deb_nic, deb_dime, deb_gum, deb_app, deb_yog);
 
    // Reset timer (3 seconds)
-   clock_divider #(374999999) reset_timer(clk, activity, inactivity_rst);
-
-   // Divide clock down to 50 ms period for debouncing
-   clock_divider #(6249999) debounce_clk(clk, rst, deb_clk);
+   clock_divider #(reset_count) reset_timer(clk, activity, inactivity_rst);
 
    // Seven segment display divider
-   clock_divider #(499999) display_clk(clk, rst, disp_clk);
+   clock_divider #(disp_count) display_clk(clk, rst, disp_clk);
 
    // Button debouncing 4(+1) for 250 ms debounce
-   button_debounce #(.clk_division(6249999), .seq_samps(4)) nickel_debounce(clk, rst, nickel, deb_nic);
-   button_debounce #(.clk_division(6249999), .seq_samps(4)) dime_debounce(clk, rst, dime, deb_dime);
-   button_debounce #(.clk_division(6249999), .seq_samps(4)) gum_debounce(clk, rst, gum, deb_gum);
-   button_debounce #(.clk_division(6249999), .seq_samps(4)) apple_debounce(clk, rst, apple, deb_app);
-   button_debounce #(.clk_division(6249999), .seq_samps(4)) yogurt_debounce(clk, rst, yogurt, deb_yog);
+   button_debounce #(.clk_division(debounce_interval), .seq_samps(debounce_samples)) nickel_debounce(clk, rst, nickel, deb_nic);
+   button_debounce #(.clk_division(debounce_interval), .seq_samps(debounce_samples)) dime_debounce(clk, rst, dime, deb_dime);
+   button_debounce #(.clk_division(debounce_interval), .seq_samps(debounce_samples)) gum_debounce(clk, rst, gum, deb_gum);
+   button_debounce #(.clk_division(debounce_interval), .seq_samps(debounce_samples)) apple_debounce(clk, rst, apple, deb_app);
+   button_debounce #(.clk_division(debounce_interval), .seq_samps(debounce_samples)) yogurt_debounce(clk, rst, yogurt, deb_yog);
 
    // Hook up vending machine
    vending_machine vendor(clk,
