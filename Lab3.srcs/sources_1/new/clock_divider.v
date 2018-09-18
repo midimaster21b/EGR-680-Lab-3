@@ -30,11 +30,9 @@ module clock_divider(clk, rst, divided_clk);
    parameter [31:0] peak = 1000;
 
    // Declare registers
-   // reg	  not_a_clk, rst;
-   // output reg divided_clk = 0;
    reg [31:0] counter = 0;
 
-   always @(posedge clk)
+   always @(posedge clk or posedge rst)
      begin
 	// Handle reset behavior
 	if(rst == 1)
