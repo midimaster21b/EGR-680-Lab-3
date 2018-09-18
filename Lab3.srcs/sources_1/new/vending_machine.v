@@ -57,17 +57,17 @@
 `define total_twenty       4'b1000
 
 // Change definitions
-`define change_nothing     2'b00
-`define change_five        2'b01
-`define change_ten         2'b10
-`define change_fifteen     2'b11
+`define change_nothing     4'b0000
+`define change_five        4'b0101
+`define change_ten         4'b1010
+`define change_fifteen     4'b1111
 
 module vending_machine(clk, rst, nickel, dime, gum, apple, yogurt, dispensed_item, change);
 
    // Define inputs/outputs
    input  clk, rst, nickel, dime, gum, apple, yogurt;
    output [3:0] dispensed_item;
-   output [1:0] change;
+   output [3:0] change;
 
    // Define module parameters
    parameter [31:0] dispenser_state_time = 124999999; // 1 second
@@ -76,7 +76,7 @@ module vending_machine(clk, rst, nickel, dime, gum, apple, yogurt, dispensed_ite
    reg [3:0]	current_state = `reset;
    reg [3:0]	next_state = `reset;
    reg [31:0]	temp_counter = 0; // For waiting in states
-   reg [1:0]	change = 0;
+   reg [3:0]	change = 0;
    reg [3:0]	dispensed_item = 0;
 
    // State transition

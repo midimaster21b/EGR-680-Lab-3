@@ -22,7 +22,9 @@ set_property -dict { PACKAGE_PIN U19 IOSTANDARD LVCMOS33 } [get_ports { seven_se
 set_property -dict { PACKAGE_PIN W18 IOSTANDARD LVCMOS33 } [get_ports { seven_segment[0] }];
 set_property -dict { PACKAGE_PIN W19 IOSTANDARD LVCMOS33 } [get_ports { seven_segment_digit }];
 
-# PmodB (LED Status Bar)
-set_property -dict { PACKAGE_PIN W14 IOSTANDARD LVCMOS33 } [get_ports { progress_bar_clk }];
-set_property -dict { PACKAGE_PIN Y14 IOSTANDARD LVCMOS33 } [get_ports { progress_bar_data }];
+# Onboard LED's
+set_property -dict { PACKAGE_PIN M14 IOSTANDARD LVCMOS33 } [get_ports { change_output[3] }];
+set_property -dict { PACKAGE_PIN N16 IOSTANDARD LVCMOS33 } [get_ports { change_output[2] }];
+set_property -dict { PACKAGE_PIN P14 IOSTANDARD LVCMOS33 } [get_ports { change_output[1] }];
+set_property -dict { PACKAGE_PIN R14 IOSTANDARD LVCMOS33 } [get_ports { change_output[0] }];
 
