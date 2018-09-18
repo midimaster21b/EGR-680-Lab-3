@@ -39,7 +39,6 @@ module vending_machine_top(
    parameter [31:0] reset_count = 374999999;
    parameter [31:0] disp_count = 499;
 
-
    // Debounce wires
    wire    deb_nic, deb_dime, deb_gum, deb_app, deb_yog;
    wire    disp_clk;

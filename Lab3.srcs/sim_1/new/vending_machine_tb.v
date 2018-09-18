@@ -28,15 +28,15 @@ module vending_machine_tb();
    wire [1:0] change;
 
    // Initialize module
-   vending_machine testing(clk, rst,
-			   nickel,
-			   dime,
-			   gum,
-			   apple,
-			   yogurt,
-			   desired_out,
-			   change
-			   );
+   vending_machine #(5) testing(clk, rst,
+				nickel,
+				dime,
+				gum,
+				apple,
+				yogurt,
+				desired_out,
+				change
+				);
 
    // Generate clock signal
    always #10 clk = ~clk;
@@ -57,12 +57,13 @@ module vending_machine_tb();
    // Pull reset low at 100 ns
    initial #100 rst = 1'b0;
 
-   // Set button to high at 200 ns
+   // Set nickel high between 300 and 400 ns
    initial #300 nickel = 1'b1;
-   // initial #400 nickel = 1'b0;
+   initial #400 nickel = 1'b0;
 
-   // Set button to low at 500 ns
-   // initial #500 btn = 1'b0;
+   // Set gum high between 500 and 520 ns;
+   initial #500 gum = 1'b1;
+   initial #520 gum = 1'b0;
 
    // Run for 1000 ns
    initial #1000 $finish;

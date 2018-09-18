@@ -25,7 +25,6 @@ module vending_machine_top_tb();
 
    reg nickel, dime, gum, apple, yogurt;
    wire [6:0] seven_seg_out;
-   // wire       seven_seg;
    wire       progress_bar_clk;
    wire       progress_bar_data;
 
@@ -50,7 +49,7 @@ module vending_machine_top_tb();
    initial
      begin
 	clk = 1'b0;
-	rst = 1'b1;
+	rst = 1'b0;
 	btn = 1'b0;
 	nickel = 1'b0;
 	dime = 1'b0;
@@ -62,11 +61,8 @@ module vending_machine_top_tb();
    // Pull reset low at 100 ns
    initial #100 rst = 1'b0;
 
-   // Set button to high at 200 ns
-   // initial #200 btn = 1'b1;
-
-   // Set button to low at 500 ns
-   // initial #500 btn = 1'b0;
+   // Set nickel high at 200 ns
+   initial #200 nickel = 1'b1;
 
    // Run for 1000 ns
    initial #1000 $finish;
