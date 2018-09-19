@@ -73,348 +73,356 @@ module vending_machine(clk, rst, nickel, dime, gum, apple, yogurt, dispensed_ite
    parameter [31:0] dispenser_state_time = 124999999; // 1 second
 
    // Define module registers
-   reg [3:0]	current_state = `reset;
-   reg [31:0]	temp_counter = 0; // For waiting in states
-   reg [3:0]	change = 0;
-   reg [3:0]	dispensed_item;
+   reg [3:0] 	current_state = `reset;
+   reg [31:0] 	temp_counter = 0; // For waiting in states
+   reg [3:0] 	change = 0;
+   reg [3:0] 	dispensed_item;
 
    // Next state logic
    always @(posedge clk)
      begin
-	case(current_state)
-	  /**********************
-	   * Reset State
-	   **********************/
-	  `reset:
-	    begin
-	       temp_counter <= 0;
-
-	       // Handle nickel input
-	       if(nickel == 1)
+	if(rst == 1)
+	  begin
+	     current_state = `reset;
+	  end
+	else
+	  begin
+	     case(current_state)
+	       /**********************
+		* Reset State
+		**********************/
+	       `reset:
 		 begin
-		    current_state <= `five_cents;
-		 end
+		    temp_counter <= 0;
 
-	       // Handle dime input
-	       else if(dime == 1)
+		    // Handle nickel input
+		    if(nickel == 1)
+		      begin
+			 current_state <= `five_cents;
+		      end
+
+		    // Handle dime input
+		    else if(dime == 1)
+		      begin
+			 current_state <= `ten_cents;
+		      end
+
+		    else
+		      begin
+			 current_state <= `reset;
+		      end
+		 end // case: `reset
+
+
+	       /**********************
+		* Five Cent State
+		**********************/
+	       `five_cents:
 		 begin
-		    current_state <= `ten_cents;
-		 end
+		    // Handle nickel entered
+		    if(nickel == 1)
+		      begin
+			 // Handle simultaneous nickel and gum selection
+			 if(gum == 1)
+			   begin
+			      current_state <= `dispense_gum_10;
+			   end
 
-	       else
+			 // Otherwise just increment total entered amount
+			 else
+			   begin
+			      current_state <= `ten_cents;
+			   end
+		      end
+
+		    // Handle dime entered
+		    else if(dime == 1)
+		      begin
+			 // Handle simultaneous dime and gum selection
+			 if(gum == 1)
+			   begin
+			      current_state <= `dispense_gum_15;
+			   end
+
+			 // Handle simultaneous dime and apple selection
+			 else if(apple == 1)
+			   begin
+			      current_state <= `dispense_apple_15;
+			   end
+
+			 // Otherwise just increment total entered amount
+			 else
+			   begin
+			      current_state <= `fifteen_cents;
+			   end
+		      end // if (dime == 1)
+
+		    else
+		      begin
+			 current_state <= `five_cents;
+		      end // else: !if(dime == 1)
+		 end // case: `five_cents
+
+	       /**********************
+		* Ten Cent State
+		**********************/
+	       `ten_cents:
 		 begin
-		    current_state <= `reset;
-		 end
-	    end // case: `reset
+		    // Handle nickel entered
+		    if(nickel == 1)
+		      begin
+			 // Handle simultaneous nickel and gum inputs
+			 if(gum == 1)
+			   begin
+			      current_state <= `dispense_gum_15;
+			   end
 
+			 // Handle simultaneous nickel and apple inputs
+			 else if(apple == 1)
+			   begin
+			      current_state <= `dispense_apple_15;
+			   end
 
-	  /**********************
-	   * Five Cent State
-	   **********************/
-	  `five_cents:
-	    begin
-	       // Handle nickel entered
-	       if(nickel == 1)
-		 begin
-		    // Handle simultaneous nickel and gum selection
-		    if(gum == 1)
+			 // Otherwise increment total money input
+			 else
+			   begin
+			      current_state <= `fifteen_cents;
+			   end
+		      end // if (nickel == 1)
+
+		    // Handle dime entered
+		    else if(dime == 1)
+		      begin
+			 // Handle simultaneous dime and gum inputs
+			 if(gum == 1)
+			   begin
+			      current_state <= `dispense_gum_20;
+			   end
+
+			 // Handle simultaneous dime and apple inputs
+			 else if(apple == 1)
+			   begin
+			      current_state <= `dispense_apple_20;
+			   end
+
+			 // Handle simultaneous dime and yogurt inputs
+			 else if(yogurt == 1)
+			   begin
+			      current_state <= `dispense_yogurt_20;
+			   end
+
+			 // Otherwise increment total money input
+			 else
+			   begin
+			      current_state <= `twenty_cents;
+			   end
+		      end // if (dime == 1)
+
+		    // Handle gum alone entered
+		    else if(gum == 1)
 		      begin
 			 current_state <= `dispense_gum_10;
 		      end
 
-		    // Otherwise just increment total entered amount
 		    else
 		      begin
 			 current_state <= `ten_cents;
 		      end
-		 end
+		 end // case: `ten_cents
 
-	       // Handle dime entered
-	       else if(dime == 1)
+	       /**********************
+		* Fifteen Cent State
+		**********************/
+	       `fifteen_cents:
 		 begin
-		    // Handle simultaneous dime and gum selection
-		    if(gum == 1)
+		    // Handle nickel or dime entered (20 cent max cap)
+		    if(nickel == 1 || dime == 1)
+		      begin
+			 // Handle simultaneous nickel and gum inputs
+			 if(gum == 1)
+			   begin
+			      current_state <= `dispense_gum_20;
+			   end
+
+			 // Handle simultaneous nickel and apple inputs
+			 else if(apple == 1)
+			   begin
+			      current_state <= `dispense_apple_20;
+			   end
+
+			 // Handle simultaneous nickel and yogurt inputs
+			 else if(yogurt == 1)
+			   begin
+			      current_state <= `dispense_yogurt_20;
+			   end
+
+			 // Otherwise increment total money input
+			 else
+			   begin
+			      current_state <= `twenty_cents;
+			   end
+		      end // if (nickel == 1)
+
+		    // Handle gum alone entered
+		    else if(gum == 1)
 		      begin
 			 current_state <= `dispense_gum_15;
 		      end
 
-		    // Handle simultaneous dime and apple selection
+		    // Handle apple alone entered
 		    else if(apple == 1)
 		      begin
 			 current_state <= `dispense_apple_15;
 		      end
 
-		    // Otherwise just increment total entered amount
 		    else
 		      begin
 			 current_state <= `fifteen_cents;
 		      end
-		 end // if (dime == 1)
 
-	       else
-		 begin
-		    current_state <= `five_cents;
-		 end // else: !if(dime == 1)
-	    end // case: `five_cents
+		 end // case: `fifteen_cents
 
-	  /**********************
-	   * Ten Cent State
-	   **********************/
-	  `ten_cents:
-	    begin
-	       // Handle nickel entered
-	       if(nickel == 1)
+	       /**********************
+		* Twenty Cent State
+		**********************/
+	       `twenty_cents:
 		 begin
-		    // Handle simultaneous nickel and gum inputs
+		    // Handle gum input
 		    if(gum == 1)
 		      begin
+			 current_state <= `dispense_gum_20;
+		      end
+
+		    // Handle apple input
+		    else if(apple == 1)
+		      begin
+			 current_state <= `dispense_apple_20;
+		      end
+
+		    // Handle yogurt input
+		    else if(yogurt == 1)
+		      begin
+			 current_state <= `dispense_yogurt_20;
+		      end
+
+		    // Handle no input
+		    else
+		      begin
+			 current_state <= `twenty_cents;
+		      end
+
+		 end // case: `twenty_cents
+
+	       /************************
+		* Dispensing Gum States
+		************************/
+	       `dispense_gum_10:
+		 begin
+		    // Check if it has reached dispenser state time
+		    if(temp_counter >= dispenser_state_time)
+		      begin
+			 temp_counter <= 0;
+			 current_state <= `reset;
+		      end
+		    else
+		      begin
+			 // Increment temp counter
+			 temp_counter <= temp_counter + 1;
+			 current_state <= `dispense_gum_10;
+		      end
+		 end // case: `dispense_gum_10
+
+	       `dispense_gum_15:
+		 begin
+		    // Check if it has reached dispenser state time
+		    if(temp_counter >= dispenser_state_time)
+		      begin
+			 temp_counter <= 0;
+			 current_state <= `reset;
+		      end
+		    else
+		      begin
+			 // Increment temp counter
+			 temp_counter <= temp_counter + 1;
 			 current_state <= `dispense_gum_15;
 		      end
+		 end // case: `dispense_gum_15
 
-		    // Handle simultaneous nickel and apple inputs
-		    else if(apple == 1)
+	       `dispense_gum_20:
+		 begin
+		    // Check if it has reached dispenser state time
+		    if(temp_counter >= dispenser_state_time)
 		      begin
+			 temp_counter <= 0;
+			 current_state <= `reset;
+		      end
+		    else
+		      begin
+			 // Increment temp counter
+			 temp_counter <= temp_counter + 1;
+			 current_state <= `dispense_gum_20;
+		      end
+		 end // case: `dispense_gum_20
+
+	       /**************************
+		* Dispensing Apple States
+		**************************/
+	       `dispense_apple_15:
+		 begin
+		    // Check if it has reached dispenser state time
+		    if(temp_counter >= dispenser_state_time)
+		      begin
+			 temp_counter <= 0;
+			 current_state <= `reset;
+		      end
+		    else
+		      begin
+			 // Increment temp counter
+			 temp_counter <= temp_counter + 1;
 			 current_state <= `dispense_apple_15;
 		      end
+		 end // case: `dispense_apple_15
 
-		    // Otherwise increment total money input
+	       `dispense_apple_20:
+		 begin
+		    // Check if it has reached dispenser state time
+		    if(temp_counter >= dispenser_state_time)
+		      begin
+			 temp_counter <= 0;
+			 current_state <= `reset;
+		      end
 		    else
 		      begin
-			 current_state <= `fifteen_cents;
-		      end
-		 end // if (nickel == 1)
-
-	       // Handle dime entered
-	       else if(dime == 1)
-		 begin
-		    // Handle simultaneous dime and gum inputs
-		    if(gum == 1)
-		      begin
-			 current_state <= `dispense_gum_20;
-		      end
-
-		    // Handle simultaneous dime and apple inputs
-		    else if(apple == 1)
-		      begin
+			 // Increment temp counter
+			 temp_counter <= temp_counter + 1;
 			 current_state <= `dispense_apple_20;
 		      end
+		 end // case: `dispense_apple_20
 
-		    // Handle simultaneous dime and yogurt inputs
-		    else if(yogurt == 1)
+	       /***************************
+		* Dispensing Yogurt States
+		***************************/
+	       `dispense_yogurt_20:
+		 begin
+		    // Check if it has reached dispenser state time
+		    if(temp_counter >= dispenser_state_time)
 		      begin
-			 current_state <= `dispense_yogurt_20;
+			 temp_counter <= 0;
+			 current_state <= `reset;
 		      end
-
-		    // Otherwise increment total money input
 		    else
 		      begin
-			 current_state <= `twenty_cents;
-		      end
-		 end // if (dime == 1)
-
-	       // Handle gum alone entered
-	       else if(gum == 1)
-		 begin
-		    current_state <= `dispense_gum_10;
-		 end
-
-	       else
-		 begin
-		    current_state <= `ten_cents;
-		 end
-	    end // case: `ten_cents
-
-	  /**********************
-	   * Fifteen Cent State
-	   **********************/
-	  `fifteen_cents:
-	    begin
-	       // Handle nickel or dime entered (20 cent max cap)
-	       if(nickel == 1 || dime == 1)
-		 begin
-		    // Handle simultaneous nickel and gum inputs
-		    if(gum == 1)
-		      begin
-			 current_state <= `dispense_gum_20;
-		      end
-
-		    // Handle simultaneous nickel and apple inputs
-		    else if(apple == 1)
-		      begin
-			 current_state <= `dispense_apple_20;
-		      end
-
-		    // Handle simultaneous nickel and yogurt inputs
-		    else if(yogurt == 1)
-		      begin
+			 // Increment temp counter
+			 temp_counter <= temp_counter + 1;
 			 current_state <= `dispense_yogurt_20;
 		      end
+		 end // case: `dispense_yogurt_20
 
-		    // Otherwise increment total money input
-		    else
-		      begin
-			 current_state <= `twenty_cents;
-		      end
-		 end // if (nickel == 1)
+	       // handle out of range state
+	       default: current_state <= `reset;
+	     endcase // case (current_state)
+	  end // else: !if(rst == 1)
 
-	       // Handle gum alone entered
-	       else if(gum == 1)
-		 begin
-		    current_state <= `dispense_gum_15;
-		 end
-
-	       // Handle apple alone entered
-	       else if(apple == 1)
-		 begin
-		    current_state <= `dispense_apple_15;
-		 end
-
-	       else
-		 begin
-		    current_state <= `fifteen_cents;
-		 end
-
-	    end // case: `fifteen_cents
-
-	  /**********************
-	   * Twenty Cent State
-	   **********************/
-	  `twenty_cents:
-	    begin
-	       // Handle gum input
-	       if(gum == 1)
-		 begin
-		    current_state <= `dispense_gum_20;
-		 end
-
-	       // Handle apple input
-	       else if(apple == 1)
-		 begin
-		    current_state <= `dispense_apple_20;
-		 end
-
-	       // Handle yogurt input
-	       else if(yogurt == 1)
-		 begin
-		    current_state <= `dispense_yogurt_20;
-		 end
-
-	       // Handle no input
-	       else
-		 begin
-		    current_state <= `twenty_cents;
-		 end
-
-	    end // case: `twenty_cents
-
-	  /************************
-	   * Dispensing Gum States
-	   ************************/
-	  `dispense_gum_10:
-	    begin
-	       // Check if it has reached dispenser state time
-	       if(temp_counter >= dispenser_state_time)
-		 begin
-		    temp_counter <= 0;
-		    current_state <= `reset;
-		 end
-	       else
-		 begin
-		    // Increment temp counter
-		    temp_counter <= temp_counter + 1;
-		    current_state <= `dispense_gum_10;
-		 end
-	    end // case: `dispense_gum_10
-
-	  `dispense_gum_15:
-	    begin
-	       // Check if it has reached dispenser state time
-	       if(temp_counter >= dispenser_state_time)
-		 begin
-		    temp_counter <= 0;
-		    current_state <= `reset;
-		 end
-	       else
-		 begin
-		    // Increment temp counter
-		    temp_counter <= temp_counter + 1;
-		    current_state <= `dispense_gum_15;
-		 end
-	    end // case: `dispense_gum_15
-
-	  `dispense_gum_20:
-	    begin
-	       // Check if it has reached dispenser state time
-	       if(temp_counter >= dispenser_state_time)
-		 begin
-		    temp_counter <= 0;
-		    current_state <= `reset;
-		 end
-	       else
-		 begin
-		    // Increment temp counter
-		    temp_counter <= temp_counter + 1;
-		    current_state <= `dispense_gum_20;
-		 end
-	    end // case: `dispense_gum_20
-
-	  /**************************
-	   * Dispensing Apple States
-	   **************************/
-	  `dispense_apple_15:
-	    begin
-	       // Check if it has reached dispenser state time
-	       if(temp_counter >= dispenser_state_time)
-		 begin
-		    temp_counter <= 0;
-		    current_state <= `reset;
-		 end
-	       else
-		 begin
-		    // Increment temp counter
-		    temp_counter <= temp_counter + 1;
-		    current_state <= `dispense_apple_15;
-		 end
-	    end // case: `dispense_apple_15
-
-	  `dispense_apple_20:
-	    begin
-	       // Check if it has reached dispenser state time
-	       if(temp_counter >= dispenser_state_time)
-		 begin
-		    temp_counter <= 0;
-		    current_state <= `reset;
-		 end
-	       else
-		 begin
-		    // Increment temp counter
-		    temp_counter <= temp_counter + 1;
-		    current_state <= `dispense_apple_20;
-		 end
-	    end // case: `dispense_apple_20
-
-	  /***************************
-	   * Dispensing Yogurt States
-	   ***************************/
-	  `dispense_yogurt_20:
-	    begin
-	       // Check if it has reached dispenser state time
-	       if(temp_counter >= dispenser_state_time)
-		 begin
-		    temp_counter <= 0;
-		    current_state <= `reset;
-		 end
-	       else
-		 begin
-		    // Increment temp counter
-		    temp_counter <= temp_counter + 1;
-		    current_state <= `dispense_yogurt_20;
-		 end
-	    end // case: `dispense_yogurt_20
-
-	  // handle out of range state
-	  default: current_state <= `reset;
-	endcase // case (current_state)
      end // always @ *
 
 
