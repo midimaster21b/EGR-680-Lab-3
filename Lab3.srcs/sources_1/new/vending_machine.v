@@ -74,24 +74,9 @@ module vending_machine(clk, rst, nickel, dime, gum, apple, yogurt, dispensed_ite
 
    // Define module registers
    reg [3:0]	current_state = `reset;
-   reg [3:0]	next_state = `reset;
    reg [31:0]	temp_counter = 0; // For waiting in states
    reg [3:0]	change = 0;
-   reg [3:0]	dispensed_item = 0;
-
-   // State transition
-   always @(posedge clk)
-     begin
-	if(rst == 1)
-	  begin
-	     current_state <= `reset;
-	  end
-	else
-	  begin
-	     // Assign next state to current state
-	     current_state <= next_state;
-	  end
-     end // always @ (posedge clk)
+   reg [3:0]	dispensed_item;
 
    // Next state logic
    always @(posedge clk)
@@ -107,18 +92,18 @@ module vending_machine(clk, rst, nickel, dime, gum, apple, yogurt, dispensed_ite
 	       // Handle nickel input
 	       if(nickel == 1)
 		 begin
-		    next_state <= `five_cents;
+		    current_state <= `five_cents;
 		 end
 
 	       // Handle dime input
 	       else if(dime == 1)
 		 begin
-		    next_state <= `ten_cents;
+		    current_state <= `ten_cents;
 		 end
 
 	       else
 		 begin
-		    next_state <= `reset;
+		    current_state <= `reset;
 		 end
 	    end // case: `reset
 
@@ -134,13 +119,13 @@ module vending_machine(clk, rst, nickel, dime, gum, apple, yogurt, dispensed_ite
 		    // Handle simultaneous nickel and gum selection
 		    if(gum == 1)
 		      begin
-			 next_state <= `dispense_gum_10;
+			 current_state <= `dispense_gum_10;
 		      end
 
 		    // Otherwise just increment total entered amount
 		    else
 		      begin
-			 next_state <= `ten_cents;
+			 current_state <= `ten_cents;
 		      end
 		 end
 
@@ -150,25 +135,25 @@ module vending_machine(clk, rst, nickel, dime, gum, apple, yogurt, dispensed_ite
 		    // Handle simultaneous dime and gum selection
 		    if(gum == 1)
 		      begin
-			 next_state <= `dispense_gum_15;
+			 current_state <= `dispense_gum_15;
 		      end
 
 		    // Handle simultaneous dime and apple selection
 		    else if(apple == 1)
 		      begin
-			 next_state <= `dispense_apple_15;
+			 current_state <= `dispense_apple_15;
 		      end
 
 		    // Otherwise just increment total entered amount
 		    else
 		      begin
-			 next_state <= `fifteen_cents;
+			 current_state <= `fifteen_cents;
 		      end
 		 end // if (dime == 1)
 
 	       else
 		 begin
-		    next_state <= `five_cents;
+		    current_state <= `five_cents;
 		 end // else: !if(dime == 1)
 	    end // case: `five_cents
 
@@ -183,19 +168,19 @@ module vending_machine(clk, rst, nickel, dime, gum, apple, yogurt, dispensed_ite
 		    // Handle simultaneous nickel and gum inputs
 		    if(gum == 1)
 		      begin
-			 next_state <= `dispense_gum_15;
+			 current_state <= `dispense_gum_15;
 		      end
 
 		    // Handle simultaneous nickel and apple inputs
 		    else if(apple == 1)
 		      begin
-			 next_state <= `dispense_apple_15;
+			 current_state <= `dispense_apple_15;
 		      end
 
 		    // Otherwise increment total money input
 		    else
 		      begin
-			 next_state <= `fifteen_cents;
+			 current_state <= `fifteen_cents;
 		      end
 		 end // if (nickel == 1)
 
@@ -205,37 +190,37 @@ module vending_machine(clk, rst, nickel, dime, gum, apple, yogurt, dispensed_ite
 		    // Handle simultaneous dime and gum inputs
 		    if(gum == 1)
 		      begin
-			 next_state <= `dispense_gum_20;
+			 current_state <= `dispense_gum_20;
 		      end
 
 		    // Handle simultaneous dime and apple inputs
 		    else if(apple == 1)
 		      begin
-			 next_state <= `dispense_apple_20;
+			 current_state <= `dispense_apple_20;
 		      end
 
 		    // Handle simultaneous dime and yogurt inputs
 		    else if(yogurt == 1)
 		      begin
-			 next_state <= `dispense_yogurt_20;
+			 current_state <= `dispense_yogurt_20;
 		      end
 
 		    // Otherwise increment total money input
 		    else
 		      begin
-			 next_state <= `twenty_cents;
+			 current_state <= `twenty_cents;
 		      end
 		 end // if (dime == 1)
 
 	       // Handle gum alone entered
 	       else if(gum == 1)
 		 begin
-		    next_state <= `dispense_gum_10;
+		    current_state <= `dispense_gum_10;
 		 end
 
 	       else
 		 begin
-		    next_state <= `ten_cents;
+		    current_state <= `ten_cents;
 		 end
 	    end // case: `ten_cents
 
@@ -250,43 +235,43 @@ module vending_machine(clk, rst, nickel, dime, gum, apple, yogurt, dispensed_ite
 		    // Handle simultaneous nickel and gum inputs
 		    if(gum == 1)
 		      begin
-			 next_state <= `dispense_gum_20;
+			 current_state <= `dispense_gum_20;
 		      end
 
 		    // Handle simultaneous nickel and apple inputs
 		    else if(apple == 1)
 		      begin
-			 next_state <= `dispense_apple_20;
+			 current_state <= `dispense_apple_20;
 		      end
 
 		    // Handle simultaneous nickel and yogurt inputs
 		    else if(yogurt == 1)
 		      begin
-			 next_state <= `dispense_yogurt_20;
+			 current_state <= `dispense_yogurt_20;
 		      end
 
 		    // Otherwise increment total money input
 		    else
 		      begin
-			 next_state <= `twenty_cents;
+			 current_state <= `twenty_cents;
 		      end
 		 end // if (nickel == 1)
 
 	       // Handle gum alone entered
 	       else if(gum == 1)
 		 begin
-		    next_state <= `dispense_gum_15;
+		    current_state <= `dispense_gum_15;
 		 end
 
 	       // Handle apple alone entered
 	       else if(apple == 1)
 		 begin
-		    next_state <= `dispense_apple_15;
+		    current_state <= `dispense_apple_15;
 		 end
 
 	       else
 		 begin
-		    next_state <= `fifteen_cents;
+		    current_state <= `fifteen_cents;
 		 end
 
 	    end // case: `fifteen_cents
@@ -299,25 +284,25 @@ module vending_machine(clk, rst, nickel, dime, gum, apple, yogurt, dispensed_ite
 	       // Handle gum input
 	       if(gum == 1)
 		 begin
-		    next_state <= `dispense_gum_20;
+		    current_state <= `dispense_gum_20;
 		 end
 
 	       // Handle apple input
 	       else if(apple == 1)
 		 begin
-		    next_state <= `dispense_apple_20;
+		    current_state <= `dispense_apple_20;
 		 end
 
 	       // Handle yogurt input
 	       else if(yogurt == 1)
 		 begin
-		    next_state <= `dispense_yogurt_20;
+		    current_state <= `dispense_yogurt_20;
 		 end
 
 	       // Handle no input
 	       else
 		 begin
-		    next_state <= `twenty_cents;
+		    current_state <= `twenty_cents;
 		 end
 
 	    end // case: `twenty_cents
@@ -331,13 +316,13 @@ module vending_machine(clk, rst, nickel, dime, gum, apple, yogurt, dispensed_ite
 	       if(temp_counter >= dispenser_state_time)
 		 begin
 		    temp_counter <= 0;
-		    next_state <= `reset;
+		    current_state <= `reset;
 		 end
 	       else
 		 begin
 		    // Increment temp counter
 		    temp_counter <= temp_counter + 1;
-		    next_state <= `dispense_gum_10;
+		    current_state <= `dispense_gum_10;
 		 end
 	    end // case: `dispense_gum_10
 
@@ -347,13 +332,13 @@ module vending_machine(clk, rst, nickel, dime, gum, apple, yogurt, dispensed_ite
 	       if(temp_counter >= dispenser_state_time)
 		 begin
 		    temp_counter <= 0;
-		    next_state <= `reset;
+		    current_state <= `reset;
 		 end
 	       else
 		 begin
 		    // Increment temp counter
 		    temp_counter <= temp_counter + 1;
-		    next_state <= `dispense_gum_15;
+		    current_state <= `dispense_gum_15;
 		 end
 	    end // case: `dispense_gum_15
 
@@ -363,13 +348,13 @@ module vending_machine(clk, rst, nickel, dime, gum, apple, yogurt, dispensed_ite
 	       if(temp_counter >= dispenser_state_time)
 		 begin
 		    temp_counter <= 0;
-		    next_state <= `reset;
+		    current_state <= `reset;
 		 end
 	       else
 		 begin
 		    // Increment temp counter
 		    temp_counter <= temp_counter + 1;
-		    next_state <= `dispense_gum_20;
+		    current_state <= `dispense_gum_20;
 		 end
 	    end // case: `dispense_gum_20
 
@@ -382,13 +367,13 @@ module vending_machine(clk, rst, nickel, dime, gum, apple, yogurt, dispensed_ite
 	       if(temp_counter >= dispenser_state_time)
 		 begin
 		    temp_counter <= 0;
-		    next_state <= `reset;
+		    current_state <= `reset;
 		 end
 	       else
 		 begin
 		    // Increment temp counter
 		    temp_counter <= temp_counter + 1;
-		    next_state <= `dispense_apple_15;
+		    current_state <= `dispense_apple_15;
 		 end
 	    end // case: `dispense_apple_15
 
@@ -398,13 +383,13 @@ module vending_machine(clk, rst, nickel, dime, gum, apple, yogurt, dispensed_ite
 	       if(temp_counter >= dispenser_state_time)
 		 begin
 		    temp_counter <= 0;
-		    next_state <= `reset;
+		    current_state <= `reset;
 		 end
 	       else
 		 begin
 		    // Increment temp counter
 		    temp_counter <= temp_counter + 1;
-		    next_state <= `dispense_apple_20;
+		    current_state <= `dispense_apple_20;
 		 end
 	    end // case: `dispense_apple_20
 
@@ -417,18 +402,18 @@ module vending_machine(clk, rst, nickel, dime, gum, apple, yogurt, dispensed_ite
 	       if(temp_counter >= dispenser_state_time)
 		 begin
 		    temp_counter <= 0;
-		    next_state <= `reset;
+		    current_state <= `reset;
 		 end
 	       else
 		 begin
 		    // Increment temp counter
 		    temp_counter <= temp_counter + 1;
-		    next_state <= `dispense_yogurt_20;
+		    current_state <= `dispense_yogurt_20;
 		 end
 	    end // case: `dispense_yogurt_20
 
 	  // handle out of range state
-	  default: next_state <= `reset;
+	  default: current_state <= `reset;
 	endcase // case (current_state)
      end // always @ *
 
