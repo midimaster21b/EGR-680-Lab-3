@@ -52,11 +52,15 @@ module vending_machine_top(
    // Wires for connecting game output and output decoder
    wire [3:0]  seven_seg_char;
 
+   // Reset timer regs
+   `define rst_interval 124999999 // 1 second
+   `define rst_samples 3          // 4 seconds
+
    // OR the user input reset line and inactivity reset line for final reset line
    or rst_or(reset_line, rst, inactivity_rst);
 
    // Activity is due to user input, user reset, or inactivity timeout
-   or active_or(activity, reset_line, deb_nic, deb_dime, deb_gum, deb_app, deb_yog);
+   or active_or(activity, rst, deb_nic, deb_dime, deb_gum, deb_app, deb_yog);
 
    // Reset timer (3 seconds)
    button_debounce #(.clk_division(`rst_interval), .seq_samps(`rst_samples), .samp_val(0)) reset_timer(clk, activity, nickel, inactivity_rst);
