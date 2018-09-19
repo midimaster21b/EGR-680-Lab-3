@@ -29,6 +29,8 @@ module button_debounce(clk, rst, button, debounced_button);
    // Declare module parameters
    parameter [31:0] clk_division = 6249999; // 50 ms intervals
    parameter [3:0] seq_samps = 4; // Sequential samples necessary to trigger a debounced output
+   parameter samp_val = 1; // Normally desire the sample to be high for a debounce to occur
+
 
    // Declare necessary registers
    reg	  debounced_button;
@@ -53,7 +55,7 @@ module button_debounce(clk, rst, button, debounced_button);
 		  clk_counter = 0;
 
 		  // Increment counter if button is pressed
-		  if(button == 1)
+		  if(button == samp_val)
 		    begin
 		       samp_counter = samp_counter + 1;
 		    end
