@@ -30,8 +30,6 @@ module vending_machine_top(
     input	 yogurt,
     output [6:0] seven_segment_a,
     output [6:0] seven_segment_b,
-    // output	 seven_segment_digit_a,
-    // output	 seven_segment_digit_b,
     output [1:0] seven_segment_digit,
     output [3:0] change_output
     );
