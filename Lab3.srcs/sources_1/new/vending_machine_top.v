@@ -52,7 +52,7 @@ module vending_machine_top(
    wire [3:0] display;
 
    // Wires for connecting game output and output decoder
-   wire [3:0]  seven_seg_char;
+   wire [3:0]  seven_seg_char_a;
 
    // Reset timer regs
    `define rst_interval 124999999 // 1 second
