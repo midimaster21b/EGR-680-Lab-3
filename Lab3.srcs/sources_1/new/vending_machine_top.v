@@ -21,15 +21,17 @@
 
 
 module vending_machine_top(
-    input	 clk,
-    input	 rst,
-    input	 nickel,
-    input	 dime,
-    input	 gum,
-    input	 apple,
-    input	 yogurt,
-    output [6:0] seven_segment,
-    output seven_segment_digit,
+    input 	 clk,
+    input 	 rst,
+    input 	 nickel,
+    input 	 dime,
+    input 	 gum,
+    input 	 apple,
+    input 	 yogurt,
+    output [6:0] seven_segment_a,
+    output [6:0] seven_segment_b,
+    output 	 seven_segment_digit_a,
+    output 	 seven_segment_digit_b,
     output [3:0] change_output
     );
 
@@ -87,8 +89,8 @@ module vending_machine_top(
 			  change_output);
 
    // Item output translation
-   item_decoder item_dec(disp_clk, rst, display, seven_seg_char, seven_segment_digit);
+   item_decoder item_dec(disp_clk, rst, display, seven_seg_char_a, seven_segment_digit_a);
 
    // Seven segment decoder
-   seven_segment_decoder sev_seg(seven_seg_char, seven_segment);
+   seven_segment_decoder sev_seg_a(seven_seg_char_a, seven_segment_a);
 endmodule
