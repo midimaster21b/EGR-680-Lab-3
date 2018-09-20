@@ -23,7 +23,7 @@
 module seven_segment_decoder(char, decoded_output);
 
    // Declare inputs and outputs
-   input [3:0] char;
+   input [4:0] char;
    output [6:0] decoded_output;
 
    // Declare module registers
@@ -50,6 +50,9 @@ module seven_segment_decoder(char, decoded_output);
 	  11: decoded_output <= 7'b1001111; // E
 	  12: decoded_output <= 7'b1111011; // g
 	  13: decoded_output <= 7'b0111011; // Y
+	  14: decoded_output <= 7'b0010101; // n
+	  15: decoded_output <= 7'b0111101; // d
+	  16: decoded_output <= 7'b0111110; // V, U
 
 	  // Default behavior
 	  default: decoded_output <= 7'b0000000; // No output

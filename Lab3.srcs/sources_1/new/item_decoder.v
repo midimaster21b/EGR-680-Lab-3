@@ -35,18 +35,25 @@
 `define total_fifteen      4'b0111
 `define total_twenty       4'b1000
 
-module item_decoder(clk, rst, item, item_character, item_output_channel);
+module item_decoder(clk, rst, item, item_character_one, item_character_two, item_output_channel);
+// module item_decoder(clk, rst, item, item_character_one, item_output_channel_one, item_character_two, item_output_channel_two);
 
    // Declare inputs
    input clk, rst;
    input  [3:0] item;
-   output [3:0] item_character;
+   output [4:0] item_character_one;
+   output [4:0] item_character_two;
+   // output item_output_channel_one;
+   // output item_output_channel_two;
    output	item_output_channel;
 
+
    // Define registers for the module
-   reg [3:0]	item_character;
-   reg		item_output_channel;
-   // reg		output_channel = 0;
+   reg [4:0] item_character_one;
+   reg [4:0] item_character_two;
+   // reg item_output_channel_one;
+   // reg item_output_channel_one;
+   reg [1:0] item_output_channel;
 
    always @(posedge clk)
      begin
@@ -54,179 +61,239 @@ module item_decoder(clk, rst, item, item_character, item_output_channel);
 	  // When nothing is being dispensed, print nothing
 	  `dispensing_nothing:
 	    begin
-	       // if(output_channel == 0)
-	       if(item_output_channel == 0)
+	       // if(item_output_channel_one == 0)
+	       if(item_output_channel[0] == 0)
 		 begin
-		    item_character <= 15; // blank
-		    item_output_channel <= 1;
-		    // output_channel <= 1;
+		    item_character_one <= 16; // V
+		    // item_output_channel_one <= 1;
+		    item_output_channel[0] <= 1;
+
+		    item_character_two <= 14; // n
+		    item_output_channel[1] <= 1;
 		 end
 	       else
 		 begin
-		    item_character <= 15; // blank
-		    item_output_channel <= 0;
-		    // output_channel <= 0;
+		    item_character_one <= 11; // E
+		    // item_output_channel_one <= 0;
+		    item_output_channel[0] <= 0;
+
+		    item_character_two <= 15; // d
+		    item_output_channel[1] <= 0;
 		 end
 	    end
 
 	  // When dispensing gum, print g
 	  `dispensing_gum:
 	    begin
-	       // if(output_channel == 0)
-	       if(item_output_channel == 0)
+	       // if(item_output_channel_one == 0)
+	       if(item_output_channel[0] == 0)
 		 begin
-		    item_character <= 12; // g
-		    item_output_channel <= 1;
-		    // output_channel <= 1;
+		    item_character_one <= 12; // g
+		    // item_output_channel_one <= 1;
+		    item_output_channel[0] <= 1;
+
+		    item_character_two <= 31; // blank
+		    item_output_channel[1] <= 1;
 		 end
 	       else
 		 begin
-		    item_character <= 15; // blank
-		    item_output_channel <= 0;
-		    // output_channel <= 0;
+		    item_character_one <= 31; // blank
+		    // item_output_channel_one <= 0;
+		    item_output_channel[0] <= 0;
+
+		    item_character_two <= 31; // blank
+		    item_output_channel[1] <= 0;
 		 end
 	    end
 
 	  // When dispensing an apple, print A
 	  `dispensing_apple:
 	    begin
-	       // if(output_channel == 0)
-	       if(item_output_channel == 0)
+	       // if(item_output_channel_one == 0)
+	       if(item_output_channel[0] == 0)
 		 begin
-		    item_character <= 10; // A
-		    item_output_channel <= 1;
-		    // output_channel <= 1;
+		    item_character_one <= 10; // A
+		    // item_output_channel_one <= 1;
+		    item_output_channel[0] <= 1;
+
+		    item_character_two <= 31; // blank
+		    item_output_channel[1] <= 1;
 		 end
 	       else
 		 begin
-		    item_character <= 15; // blank
-		    item_output_channel <= 0;
-		    // output_channel <= 0;
+		    item_character_one <= 31; // blank
+		    // item_output_channel_one <= 0;
+		    item_output_channel[0] <= 0;
+
+		    item_character_two <= 31; // blank
+		    item_output_channel[1] <= 0;
 		 end
 	    end
 
 	  // When dispensing a yogurt, print y
 	  `dispensing_yogurt:
 	    begin
-	       // if(output_channel == 0)
-	       if(item_output_channel == 0)
+	       // if(item_output_channel_one == 0)
+	       if(item_output_channel[0] == 0)
 		 begin
-		    item_character <= 13; // y
-		    item_output_channel <= 1;
-		    // output_channel <= 1;
+		    item_character_one <= 13; // y
+		    // item_output_channel_one <= 1;
+		    item_output_channel[0] <= 1;
+
+		    item_character_two <= 31; // blank
+		    item_output_channel[1] <= 1;
 		 end
 	       else
 		 begin
-		    item_character <= 15; // blank
-		    item_output_channel <= 0;
-		    // output_channel <= 0;
+		    item_character_one <= 31; // blank
+		    // item_output_channel_one <= 0;
+		    item_output_channel[0] <= 0;
+
+		    item_character_two <= 31; // blank
+		    item_output_channel[1] <= 0;
 		 end
 	    end
 
 	  // When a total of zero is present, print 00
 	  `total_zero:
 	    begin
-	       // if(output_channel == 0)
-	       if(item_output_channel == 0)
+	       // if(item_output_channel_one == 0)
+	       if(item_output_channel[0] == 0)
 		 begin
-		    item_character <= 0; // 0
-		    item_output_channel <= 1;
-		    // output_channel <= 1;
+		    item_character_one <= 0;  // 0
+		    // item_output_channel_one <= 1;
+		    item_output_channel[0] <= 1;
+
+		    item_character_two <= 31; // blank
+		    item_output_channel[1] <= 1;
 		 end
 	       else
 		 begin
-		    item_character <= 0; // 0
-		    item_output_channel <= 0;
-		    // output_channel <= 0;
+		    item_character_one <= 0;  // 0
+		    // item_output_channel_one <= 0;
+		    item_output_channel[0] <= 0;
+
+		    item_character_two <= 31; // blank
+		    item_output_channel[1] <= 0;
 		 end
 	    end
 
 	  // When a total of five is present, print 05
 	  `total_five:
 	    begin
-	       // if(output_channel == 0)
-	       if(item_output_channel == 0)
+	       // if(item_output_channel_one == 0)
+	       if(item_output_channel[0] == 0)
 		 begin
-		    item_character <= 0; // 0
-		    item_output_channel <= 1;
-		    // output_channel <= 1;
+		    item_character_one <= 0;  // 0
+		    // item_output_channel_one <= 1;
+		    item_output_channel[0] <= 1;
+
+		    item_character_two <= 31; // blank
+		    item_output_channel[1] <= 1;
 		 end
 	       else
 		 begin
-		    item_character <= 5; // 5
-		    item_output_channel <= 0;
-		    // output_channel <= 0;
+		    item_character_one <= 5;  // 5
+		    // item_output_channel_one <= 0;
+		    item_output_channel[0] <= 0;
+
+		    item_character_two <= 31; // blank
+		    item_output_channel[1] <= 0;
 		 end
 	    end
 
 	  // When a total of ten is present, print 10
 	  `total_ten:
 	    begin
-	       // if(output_channel == 0)
-	       if(item_output_channel == 0)
+	       // if(item_output_channel_one == 0)
+	       if(item_output_channel[0] == 0)
 		 begin
-		    item_character <= 1; // 1
-		    item_output_channel <= 1;
-		    // output_channel <= 1;
+		    item_character_one <= 1;  // 1
+		    // item_output_channel_one <= 1;
+		    item_output_channel[0] <= 1;
+
+		    item_character_two <= 31; // blank
+		    item_output_channel[1] <= 1;
 		 end
 	       else
 		 begin
-		    item_character <= 0; // 0
-		    item_output_channel <= 0;
-		    // output_channel <= 0;
+		    item_character_one <= 0;  // 0
+		    // item_output_channel_one <= 0;
+		    item_output_channel[0] <= 0;
+
+		    item_character_two <= 31; // blank
+		    item_output_channel[1] <= 0;
 		 end
 	    end
 
 	  // When a total of fifteen is present, print 15
 	  `total_fifteen:
 	    begin
-	       // if(output_channel == 0)
-	       if(item_output_channel == 0)
+	       // if(item_output_channel_one == 0)
+	       if(item_output_channel[0] == 0)
 		 begin
-		    item_character <= 1; // 1
-		    item_output_channel <= 1;
-		    // output_channel <= 1;
+		    item_character_one <= 1;  // 1
+		    // item_output_channel_one <= 1;
+		    item_output_channel[0] <= 1;
+
+		    item_character_two <= 31; // blank
+		    item_output_channel[1] <= 1;
 		 end
 	       else
 		 begin
-		    item_character <= 5; // 5
-		    item_output_channel <= 0;
-		    // output_channel <= 0;
+		    item_character_one <= 5;  // 5
+		    // item_output_channel_one <= 0;
+		    item_output_channel[0] <= 0;
+
+		    item_character_two <= 31; // blank
+		    item_output_channel[1] <= 0;
 		 end
 	    end
 
 	  // When a total of twenty is present, print 20
 	  `total_twenty:
 	    begin
-	       // if(output_channel == 0)
-	       if(item_output_channel == 0)
+	       // if(item_output_channel_one == 0)
+	       if(item_output_channel[0] == 0)
 		 begin
-		    item_character <= 2; // 2
-		    item_output_channel <= 1;
-		    // output_channel <= 1;
+		    item_character_one <= 2;  // 2
+		    // item_output_channel_one <= 1;
+		    item_output_channel[0] <= 1;
+
+		    item_character_two <= 31; // blank
+		    item_output_channel[1] <= 1;
 		 end
 	       else
 		 begin
-		    item_character <= 0; // 0
-		    item_output_channel <= 0;
-		    // output_channel <= 0;
+		    item_character_one <= 0;  // 0
+		    // item_output_channel_one <= 0;
+		    item_output_channel[0] <= 0;
+
+		    item_character_two <= 31; // blank
+		    item_output_channel[1] <= 0;
 		 end
 	    end
 
 	  default:
 	    begin
-	       // if(output_channel == 0)
-	       if(item_output_channel == 0)
+	       // if(item_output_channel_one == 0)
+	       if(item_output_channel[0] == 0)
 		 begin
-		    item_character <= 15; // blank
-		    item_output_channel <= 1;
-		    // output_channel <= 1;
+		    item_character_one <= 31; // blank
+		    // item_output_channel_one <= 1;
+		    item_output_channel[0] <= 1;
+
+		    item_character_two <= 31; // blank
+		    item_output_channel[1] <= 1;
 		 end
 	       else
 		 begin
-		    item_character <= 15; // blank
-		    item_output_channel <= 0;
-		    // output_channel <= 0;
+		    item_character_one <= 31; // blank
+		    // item_output_channel_one <= 0;
+		    item_output_channel[0] <= 0;
+
+		    item_character_two <= 31; // blank
+		    item_output_channel[1] <= 0;
 		 end
 	    end
 	endcase // case (item)

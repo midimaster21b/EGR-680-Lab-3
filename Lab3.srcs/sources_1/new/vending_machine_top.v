@@ -21,17 +21,18 @@
 
 
 module vending_machine_top(
-    input 	 clk,
-    input 	 rst,
-    input 	 nickel,
-    input 	 dime,
-    input 	 gum,
-    input 	 apple,
-    input 	 yogurt,
+    input	 clk,
+    input	 rst,
+    input	 nickel,
+    input	 dime,
+    input	 gum,
+    input	 apple,
+    input	 yogurt,
     output [6:0] seven_segment_a,
     output [6:0] seven_segment_b,
-    output 	 seven_segment_digit_a,
-    output 	 seven_segment_digit_b,
+    // output	 seven_segment_digit_a,
+    // output	 seven_segment_digit_b,
+    output [1:0] seven_segment_digit,
     output [3:0] change_output
     );
 
@@ -53,6 +54,7 @@ module vending_machine_top(
 
    // Wires for connecting game output and output decoder
    wire [3:0]  seven_seg_char_a;
+   wire [3:0]  seven_seg_char_b;
 
    // Reset timer regs
    `define rst_interval 124999999 // 1 second
@@ -89,8 +91,9 @@ module vending_machine_top(
 			  change_output);
 
    // Item output translation
-   item_decoder item_dec(disp_clk, rst, display, seven_seg_char_a, seven_segment_digit_a);
+   item_decoder item_dec(disp_clk, rst, display, seven_seg_char_a, seven_seg_char_b, seven_segment_digit);
 
    // Seven segment decoder
    seven_segment_decoder sev_seg_a(seven_seg_char_a, seven_segment_a);
+   seven_segment_decoder sev_seg_b(seven_seg_char_b, seven_segment_b);
 endmodule

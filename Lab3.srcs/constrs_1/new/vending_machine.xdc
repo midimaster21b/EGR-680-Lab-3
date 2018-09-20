@@ -20,7 +20,8 @@ set_property -dict { PACKAGE_PIN Y17 IOSTANDARD LVCMOS33 } [get_ports { seven_se
 set_property -dict { PACKAGE_PIN U18 IOSTANDARD LVCMOS33 } [get_ports { seven_segment_a[2] }];
 set_property -dict { PACKAGE_PIN U19 IOSTANDARD LVCMOS33 } [get_ports { seven_segment_a[1] }];
 set_property -dict { PACKAGE_PIN W18 IOSTANDARD LVCMOS33 } [get_ports { seven_segment_a[0] }];
-set_property -dict { PACKAGE_PIN W19 IOSTANDARD LVCMOS33 } [get_ports { seven_segment_digit_a }];
+set_property -dict { PACKAGE_PIN W19 IOSTANDARD LVCMOS33 } [get_ports { seven_segment_digit[0] }];
+# set_property -dict { PACKAGE_PIN W19 IOSTANDARD LVCMOS33 } [get_ports { seven_segment_digit_a }];
 
 # PmodB
 set_property -dict { PACKAGE_PIN W14 IOSTANDARD LVCMOS33 } [get_ports { seven_segment_b[6] }];
@@ -30,7 +31,8 @@ set_property -dict { PACKAGE_PIN T10 IOSTANDARD LVCMOS33 } [get_ports { seven_se
 set_property -dict { PACKAGE_PIN V16 IOSTANDARD LVCMOS33 } [get_ports { seven_segment_b[2] }];
 set_property -dict { PACKAGE_PIN W16 IOSTANDARD LVCMOS33 } [get_ports { seven_segment_b[1] }];
 set_property -dict { PACKAGE_PIN V12 IOSTANDARD LVCMOS33 } [get_ports { seven_segment_b[0] }];
-set_property -dict { PACKAGE_PIN W13 IOSTANDARD LVCMOS33 } [get_ports { seven_segment_digit_b }];
+set_property -dict { PACKAGE_PIN W13 IOSTANDARD LVCMOS33 } [get_ports { seven_segment_digit[1] }];
+# set_property -dict { PACKAGE_PIN W13 IOSTANDARD LVCMOS33 } [get_ports { seven_segment_digit_b }];
 
 # Onboard LED's
 set_property -dict { PACKAGE_PIN M14 IOSTANDARD LVCMOS33 } [get_ports { change_output[3] }];
